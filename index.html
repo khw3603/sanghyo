@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>주식회사 상효</title>
+  <meta name="description" content="주식회사 상효 — 디지털 방송 장비 전문 공급사. Teleste Luminato 4x4 디지털 헤드엔드 공식 파트너.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&family=Noto+Serif+KR:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #F6F8FC;
+      --bg-alt: #EAEFF8;
+      --fg: #0B1524;
+      --fg-muted: #4A5E7A;
+      --fg-subtle: #7A8FA8;
+      --accent: #0047CC;
+      --accent-hover: #0039A6;
+      --accent-light: #E0EBFF;
+      --card: #FFFFFF;
+      --border: #D6E0EF;
+      --nav-bg: rgba(246,248,252,0.9);
+      --font-display: 'Noto Serif KR', Georgia, serif;
+      --font-body: 'Noto Sans KR', system-ui, sans-serif;
+      --radius: 6px;
+      --radius-lg: 12px;
+      --shadow: 0 2px 8px rgba(0,47,140,0.06), 0 0 1px rgba(0,47,140,0.1);
+      --shadow-lg: 0 8px 32px rgba(0,47,140,0.1), 0 0 2px rgba(0,47,140,0.08);
+      color-scheme: light;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #080F1E; --bg-alt: #0D1628; --fg: #E8F0FF; --fg-muted: #8BA5CC;
+        --fg-subtle: #5A7299; --accent: #4A88FF; --accent-hover: #6A9FFF;
+        --accent-light: #0D1E3A; --card: #0F1B30; --border: #1C2E4A;
+        --nav-bg: rgba(8,15,30,0.92); color-scheme: dark;
+      }
+    }
+    :root[data-theme="dark"] {
+      --bg: #080F1E; --bg-alt: #0D1628; --fg: #E8F0FF; --fg-muted: #8BA5CC;
+      --fg-subtle: #5A7299; --accent: #4A88FF; --accent-hover: #6A9FFF;
+      --accent-light: #0D1E3A; --card: #0F1B30; --border: #1C2E4A;
+      --nav-bg: rgba(8,15,30,0.92); color-scheme: dark;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 16px; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+    img { max-width: 100%; display: block; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { color: var(--accent-hover); }
+    .container { max-width: 1160px; margin-inline: auto; padding-inline: 24px; }
+    .section { padding-block: 96px; }
+    .section--alt { background: var(--bg-alt); }
+    .label { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 16px; }
+    .section-title { font-family: var(--font-display); font-size: clamp(1.6rem, 3vw, 2.4rem); font-weight: 700; line-height: 1.3; text-wrap: balance; margin-bottom: 20px; }
+    .section-desc { font-size: 1.05rem; color: var(--fg-muted); max-width: 52ch; line-height: 1.8; }
+
+    .nav { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 100; background: var(--nav-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+    .nav__inner { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+    .nav__logo { display: flex; flex-direction: row; align-items: center; gap: 10px; }
+    .nav__logo-img { height: 38px; width: auto; border-radius: 6px; background: #fff; padding: 2px; }
+    .nav__logo-text { display: flex; flex-direction: column; gap: 1px; }
+    .nav__logo-name { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; color: var(--fg); letter-spacing: -0.01em; }
+    .nav__logo-en { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--fg-subtle); }
+    .nav__links { display: flex; align-items: center; gap: 36px; list-style: none; }
+    .nav__links a { font-size: 0.9rem; font-weight: 500; color: var(--fg-muted); transition: color 0.2s; }
+    .nav__links a:hover { color: var(--accent); }
+    .nav__cta { background: var(--accent); color: #fff !important; padding: 8px 20px; border-radius: var(--radius); font-size: 0.85rem; font-weight: 600; transition: background 0.2s; }
+    .nav__cta:hover { background: var(--accent-hover) !important; color: #fff !important; }
+    @media (max-width: 700px) { .nav__links { display: none; } }
+
+    .hero { position: relative; overflow: hidden; background: var(--fg); padding-block: 100px 80px; }
+    .hero__grid { position: absolute; inset: 0; background-image: linear-gradient(to right, rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.04) 1px, transparent 1px); background-size: 48px 48px; }
+    .hero__glow { position: absolute; top: -200px; right: -200px; width: 700px; height: 700px; border-radius: 50%; background: radial-gradient(circle, rgba(0,71,204,0.3) 0%, transparent 70%); pointer-events: none; }
+    .hero__content { position: relative; z-index: 1; }
+    .hero__badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 100px; padding: 6px 14px; font-size: 0.8rem; font-weight: 500; color: rgba(255,255,255,0.7); margin-bottom: 32px; }
+    .hero__badge-dot { width: 6px; height: 6px; border-radius: 50%; background: #4AFF88; box-shadow: 0 0 8px #4AFF88; }
+    .hero__title { font-family: var(--font-display); font-size: clamp(2.2rem, 5vw, 3.8rem); font-weight: 700; line-height: 1.2; color: #FFFFFF; text-wrap: balance; margin-bottom: 24px; }
+    .hero__title em { font-style: normal; color: #6AABFF; }
+    .hero__desc { font-size: 1.1rem; color: rgba(255,255,255,0.55); max-width: 50ch; line-height: 1.8; margin-bottom: 40px; }
+    .hero__actions { display: flex; gap: 16px; flex-wrap: wrap; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px; border-radius: var(--radius); font-family: var(--font-body); font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.2s; border: none; }
+    .btn--primary { background: var(--accent); color: #fff; }
+    .btn--primary:hover { background: #0039A6; color: #fff; transform: translateY(-1px); }
+    .btn--outline { background: transparent; color: rgba(255,255,255,0.75); border: 1px solid rgba(255,255,255,0.2); }
+    .btn--outline:hover { background: rgba(255,255,255,0.06); color: #fff; }
+    .hero__stats { display: flex; gap: 48px; margin-top: 64px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.08); flex-wrap: wrap; }
+    .hero__stat-num { font-family: var(--font-display); font-size: 2rem; font-weight: 700; color: #fff; font-variant-numeric: tabular-nums; }
+    .hero__stat-label { font-size: 0.82rem; color: rgba(255,255,255,0.45); margin-top: 2px; }
+
+    .about__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+    .about__diagram { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 32px; box-shadow: var(--shadow-lg); }
+    .about__diagram-title { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--fg-subtle); margin-bottom: 24px; }
+    .signal-flow { display: flex; flex-direction: column; gap: 12px; }
+    .signal-row { display: flex; align-items: center; gap: 8px; }
+    .signal-box { flex: 1; background: var(--accent-light); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 14px; font-size: 0.78rem; font-weight: 600; color: var(--accent); text-align: center; min-width: 0; }
+    .signal-box--dark { background: var(--fg); color: #fff; border-color: var(--fg); }
+    .signal-arrow { color: var(--fg-subtle); font-size: 14px; flex-shrink: 0; }
+    .about__features { display: flex; flex-direction: column; gap: 24px; }
+    .about__feature { display: flex; gap: 16px; align-items: flex-start; }
+    .about__feature-icon { width: 40px; height: 40px; border-radius: var(--radius); background: var(--accent-light); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .about__feature-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; }
+    .about__feature-desc { font-size: 0.875rem; color: var(--fg-muted); line-height: 1.6; }
+    @media (max-width: 860px) { .about__grid { grid-template-columns: 1fr; gap: 40px; } }
+
+    .product__header { text-align: center; margin-bottom: 64px; }
+    .product__header .section-desc { margin-inline: auto; }
+    .product__showcase { display: grid; grid-template-columns: 1fr 1.2fr; gap: 48px; align-items: start; }
+    .product__card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-lg); }
+    .product__card-visual { background: linear-gradient(135deg, #0B1524 0%, #0D2550 100%); padding: 48px 32px; display: flex; align-items: center; justify-content: center; }
+    .product__rack { width: 100%; max-width: 320px; }
+    .product__card-info { padding: 28px; }
+    .product__model { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+    .product__name { font-family: var(--font-display); font-size: 1.4rem; font-weight: 700; margin-bottom: 12px; line-height: 1.3; }
+    .product__tagline { font-size: 0.9rem; color: var(--fg-muted); line-height: 1.7; margin-bottom: 20px; }
+    .product__tag-list { display: flex; gap: 8px; flex-wrap: wrap; }
+    .tag { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 4px 10px; border-radius: 100px; background: var(--accent-light); color: var(--accent); border: 1px solid var(--border); }
+    .product__details { display: flex; flex-direction: column; gap: 16px; }
+    .feature-item { display: flex; gap: 16px; padding: 20px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); }
+    .feature-item__icon { width: 44px; height: 44px; border-radius: var(--radius); background: var(--accent-light); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .feature-item__body { min-width: 0; }
+    .feature-item__title { font-size: 0.9rem; font-weight: 700; margin-bottom: 4px; }
+    .feature-item__desc { font-size: 0.82rem; color: var(--fg-muted); line-height: 1.6; }
+    @media (max-width: 860px) { .product__showcase { grid-template-columns: 1fr; } }
+
+    .specs__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-top: 48px; }
+    .spec-group { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow); }
+    .spec-group__header { padding: 16px 24px; background: var(--accent-light); border-bottom: 1px solid var(--border); }
+    .spec-group__title { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); }
+    .spec-table { width: 100%; }
+    .spec-table tr { border-bottom: 1px solid var(--border); }
+    .spec-table tr:last-child { border-bottom: none; }
+    .spec-table td { padding: 12px 24px; font-size: 0.875rem; vertical-align: top; }
+    .spec-table td:first-child { color: var(--fg-muted); width: 45%; font-weight: 500; }
+    .spec-table td:last-child { color: var(--fg); font-weight: 600; font-variant-numeric: tabular-nums; }
+
+    .cta-section { background: var(--fg); padding-block: 96px; text-align: center; position: relative; overflow: hidden; }
+    .cta-section__bg { position: absolute; inset: 0; background-image: linear-gradient(to right, rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.025) 1px, transparent 1px); background-size: 48px 48px; }
+    .cta-section__inner { position: relative; z-index: 1; }
+    .cta-section__title { font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 700; color: #fff; text-wrap: balance; margin-bottom: 16px; }
+    .cta-section__desc { color: rgba(255,255,255,0.5); font-size: 1.05rem; margin-bottom: 40px; max-width: 44ch; margin-inline: auto; }
+    .contact-info { display: inline-flex; flex-direction: column; gap: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius-lg); padding: 28px 40px; text-align: left; margin-top: 16px; }
+    .contact-row { display: flex; align-items: center; gap: 12px; font-size: 0.95rem; }
+    .contact-row__label { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.35); width: 48px; flex-shrink: 0; }
+    .contact-row__value { color: rgba(255,255,255,0.85); font-weight: 500; }
+    .contact-row__value a { color: #6AABFF; transition: color 0.2s; }
+    .contact-row__value a:hover { color: #9FCFFF; }
+
+    .footer { background: var(--bg-alt); border-top: 1px solid var(--border); padding-block: 40px 32px; }
+    .footer__inner { display: flex; flex-direction: column; gap: 16px; }
+    .footer__top { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; flex-wrap: wrap; }
+    .footer__logo-name { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; color: var(--fg); }
+    .footer__logo-en { font-size: 0.75rem; color: var(--fg-subtle); letter-spacing: 0.06em; margin-top: 2px; }
+    .footer__biz { display: flex; flex-direction: column; gap: 4px; font-size: 0.8rem; color: var(--fg-muted); text-align: right; }
+    .footer__divider { height: 1px; background: var(--border); }
+    .footer__bottom { display: flex; justify-content: space-between; align-items: center; font-size: 0.78rem; color: var(--fg-subtle); flex-wrap: wrap; gap: 8px; }
+    svg { display: inline-block; vertical-align: middle; }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container">
+    <div class="nav__inner">
+      <a href="#" class="nav__logo" style="text-decoration:none;">
+        <img src="/logo.png" alt="상효 로고" class="nav__logo-img" />
+        <div class="nav__logo-text">
+          <span class="nav__logo-name" id="nav-name-ko">주식회사 상효</span>
+          <span class="nav__logo-en" id="nav-name-en">SANGHYO CO., LTD.</span>
+        </div>
+      </a>
+      <ul class="nav__links">
+        <li><a href="#about">회사 소개</a></li>
+        <li><a href="#product">제품 소개</a></li>
+        <li><a href="#specs">기술 사양</a></li>
+        <li><a href="#contact" class="nav__cta">문의하기</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero__grid"></div>
+  <div class="hero__glow"></div>
+  <div class="container">
+    <div class="hero__content">
+      <div class="hero__badge">
+        <span class="hero__badge-dot"></span>
+        <span id="hero-badge">Teleste 공식 파트너사</span>
+      </div>
+      <h1 class="hero__title">
+        <span id="hero-t1">디지털 방송의 미래를</span><br>
+        <em id="hero-t2">신뢰할 수 있는 기술로</em>
+      </h1>
+      <p class="hero__desc" id="hero-desc">
+        주식회사 상효는 디지털 방송 헤드엔드 장비 전문 공급사입니다. Teleste Luminato 플랫폼을 통해 안정적인 방송 인프라 구축을 지원합니다.
+      </p>
+      <div class="hero__actions">
+        <a href="#product" class="btn btn--primary">제품 살펴보기</a>
+        <a href="#contact" class="btn btn--outline">문의하기</a>
+      </div>
+      <div class="hero__stats">
+        <div><div class="hero__stat-num" id="stat-0-n">4×4</div><div class="hero__stat-label" id="stat-0-l">채널 구성</div></div>
+        <div><div class="hero__stat-num" id="stat-1-n">1U</div><div class="hero__stat-label" id="stat-1-l">랙 마운트</div></div>
+        <div><div class="hero__stat-num" id="stat-2-n">DVB</div><div class="hero__stat-label" id="stat-2-l">위성 수신</div></div>
+        <div><div class="hero__stat-num" id="stat-3-n">QAM</div><div class="hero__stat-label" id="stat-3-l">케이블 출력</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="about">
+  <div class="container">
+    <div class="about__grid">
+      <div class="about__visual">
+        <div class="about__diagram">
+          <div class="about__diagram-title">신호 흐름 개요</div>
+          <div class="signal-flow">
+            <div class="signal-row">
+              <div class="signal-box">위성 신호<br><small>DVB-S/S2</small></div>
+              <span class="signal-arrow">→</span>
+              <div class="signal-box signal-box--dark">Luminato<br>헤드엔드</div>
+              <span class="signal-arrow">→</span>
+              <div class="signal-box">케이블망<br>QAM</div>
+            </div>
+            <div class="signal-row">
+              <div class="signal-box">지상파 신호<br><small>DVB-T/T2</small></div>
+              <span class="signal-arrow">→</span>
+              <div class="signal-box" style="visibility:hidden;"></div>
+              <span class="signal-arrow" style="visibility:hidden;"></span>
+              <div class="signal-box">가입자망<br>배급</div>
+            </div>
+          </div>
+          <div style="margin-top:24px; padding-top:20px; border-top:1px solid var(--border); font-size:0.78rem; color:var(--fg-subtle); line-height:1.6;">
+            원격 관리 및 모니터링 지원 · NMS 통합 운용
+          </div>
+        </div>
+      </div>
+      <div>
+        <span class="label" id="ab-lbl">회사 소개</span>
+        <h2 class="section-title" id="ab-title">방송 인프라 전문 기업,<br>주식회사 상효</h2>
+        <p class="section-desc" style="margin-bottom:36px;" id="ab-desc">
+          인천 영종도에 위치한 주식회사 상효는 디지털 방송 헤드엔드 장비의 공급·설치·유지보수를 전문으로 하는 기술 기업입니다. Teleste사의 공식 파트너로서 고객에게 최적화된 방송 솔루션을 제공합니다.
+        </p>
+        <div class="about__features">
+          <div class="about__feature">
+            <div class="about__feature-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+            </div>
+            <div>
+              <div class="about__feature-title" id="ab-ft-0-t">글로벌 브랜드 공식 파트너</div>
+              <div class="about__feature-desc" id="ab-ft-0-d">핀란드 Teleste사의 Luminato 헤드엔드 플랫폼 공식 공급사로, 정품 장비와 전문 기술 지원을 제공합니다.</div>
+            </div>
+          </div>
+          <div class="about__feature">
+            <div class="about__feature-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <div>
+              <div class="about__feature-title" id="ab-ft-1-t">신속한 기술 지원</div>
+              <div class="about__feature-desc" id="ab-ft-1-d">장비 도입부터 설치, 운용, 유지보수까지 전 주기에 걸친 기술 서비스를 제공합니다.</div>
+            </div>
+          </div>
+          <div class="about__feature">
+            <div class="about__feature-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <div>
+              <div class="about__feature-title" id="ab-ft-2-t">맞춤형 방송 솔루션</div>
+              <div class="about__feature-desc" id="ab-ft-2-d">케이블 SO, 위성방송사, 호텔·병원 등 다양한 고객 환경에 맞는 최적 솔루션을 설계합니다.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section--alt" id="product">
+  <div class="container">
+    <div class="product__header">
+      <span class="label" id="pr-lbl">제품 소개</span>
+      <h2 class="section-title" id="pr-title">Teleste Luminato<br>4×4 디지털 헤드엔드</h2>
+      <p class="section-desc" id="pr-desc">
+        소형 방송국 및 케이블 오퍼레이터를 위한 고밀도 디지털 헤드엔드 솔루션입니다. 4채널 입력과 4채널 출력을 하나의 1U 섀시에 집약하였습니다.
+      </p>
+    </div>
+    <div class="product__showcase">
+      <div class="product__card">
+        <div class="product__card-visual">
+          <svg class="product__rack" viewBox="0 0 320 160" xmlns="http://www.w3.org/2000/svg">
+            <rect x="4" y="20" width="312" height="120" rx="4" fill="#1A2A40" stroke="#2A4070" stroke-width="1"/>
+            <rect x="8" y="24" width="304" height="112" rx="3" fill="#0D1E35" stroke="#1E3460" stroke-width="1"/>
+            <rect x="16" y="32" width="80" height="20" rx="2" fill="#132040"/>
+            <text x="24" y="46" font-family="monospace" font-size="9" fill="#4A88FF" font-weight="bold">TELESTE</text>
+            <text x="16" y="68" font-family="monospace" font-size="7" fill="#4A6080">LUMINATO 4×4 HEADEND</text>
+            <text x="16" y="86" font-family="monospace" font-size="6" fill="#5A7090">INPUT</text>
+            <circle cx="20" cy="98" r="5" fill="#0B1828" stroke="#2A4060" stroke-width="1"/><circle cx="20" cy="98" r="2" fill="#1A3060"/>
+            <circle cx="36" cy="98" r="5" fill="#0B1828" stroke="#2A4060" stroke-width="1"/><circle cx="36" cy="98" r="2" fill="#1A3060"/>
+            <circle cx="52" cy="98" r="5" fill="#0B1828" stroke="#2A4060" stroke-width="1"/><circle cx="52" cy="98" r="2" fill="#1A3060"/>
+            <circle cx="68" cy="98" r="5" fill="#0B1828" stroke="#2A4060" stroke-width="1"/><circle cx="68" cy="98" r="2" fill="#1A3060"/>
+            <text x="88" y="86" font-family="monospace" font-size="6" fill="#5A7090">OUTPUT</text>
+            <circle cx="92" cy="98" r="5" fill="#0B1828" stroke="#4A88FF" stroke-width="1"/><circle cx="92" cy="98" r="2" fill="#1A3060"/>
+            <circle cx="108" cy="98" r="5" fill="#0B1828" stroke="#4A88FF" stroke-width="1"/><circle cx="108" cy="98" r="2" fill="#1A3060"/>
+            <circle cx="124" cy="98" r="5" fill="#0B1828" stroke="#4A88FF" stroke-width="1"/><circle cx="124" cy="98" r="2" fill="#1A3060"/>
+            <circle cx="140" cy="98" r="5" fill="#0B1828" stroke="#4A88FF" stroke-width="1"/><circle cx="140" cy="98" r="2" fill="#1A3060"/>
+            <text x="164" y="86" font-family="monospace" font-size="6" fill="#5A7090">STATUS</text>
+            <circle cx="168" cy="98" r="3.5" fill="#4AFF88"/><circle cx="180" cy="98" r="3.5" fill="#4AFF88"/>
+            <circle cx="192" cy="98" r="3.5" fill="#4A88FF"/><circle cx="204" cy="98" r="3.5" fill="#4A88FF"/>
+            <text x="220" y="86" font-family="monospace" font-size="6" fill="#5A7090">MGMT</text>
+            <rect x="218" y="91" width="16" height="12" rx="1" fill="#0B1828" stroke="#2A4060" stroke-width="1"/>
+            <rect x="270" y="88" width="24" height="16" rx="2" fill="#1A3060" stroke="#2A4070" stroke-width="1"/>
+            <text x="274" y="99" font-family="monospace" font-size="7" fill="#4A88FF">PWR</text>
+            <rect x="0" y="20" width="8" height="120" rx="2" fill="#1E2E44" stroke="#2A4060" stroke-width="0.5"/>
+            <rect x="312" y="20" width="8" height="120" rx="2" fill="#1E2E44" stroke="#2A4060" stroke-width="0.5"/>
+            <circle cx="4" cy="44" r="3" fill="#0D1E35" stroke="#3A5070" stroke-width="0.5"/>
+            <circle cx="4" cy="116" r="3" fill="#0D1E35" stroke="#3A5070" stroke-width="0.5"/>
+            <circle cx="316" cy="44" r="3" fill="#0D1E35" stroke="#3A5070" stroke-width="0.5"/>
+            <circle cx="316" cy="116" r="3" fill="#0D1E35" stroke="#3A5070" stroke-width="0.5"/>
+          </svg>
+        </div>
+        <div class="product__card-info">
+          <div class="product__model" id="pr-model">Teleste · Luminato Platform</div>
+          <div class="product__name" id="pr-name">Luminato 4×4<br>디지털 헤드엔드</div>
+          <p class="product__tagline" id="pr-tagline">4채널 DVB 입력 신호를 수신하여 4채널 QAM 케이블 신호로 변환·출력하는 고성능 디지털 헤드엔드 장비입니다. 1U 랙 마운트 폼팩터로 공간 효율이 뛰어납니다.</p>
+          <div class="product__tag-list" id="pr-tags">
+            <span class="tag">DVB-S/S2</span>
+            <span class="tag">DVB-T/T2</span>
+            <span class="tag">QAM 변조</span>
+            <span class="tag">1U 랙</span>
+            <span class="tag">IP 관리</span>
+          </div>
+        </div>
+      </div>
+      <div class="product__details">
+        <div class="feature-item">
+          <div class="feature-item__icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 6l11 6 11-6"/><path d="M1 18l11-6 11 6"/><path d="M1 12l11 6 11-6"/></svg></div>
+          <div class="feature-item__body">
+            <div class="feature-item__title" id="pr-ft-0-t">다중 입력 신호 지원</div>
+            <div class="feature-item__desc" id="pr-ft-0-d">DVB-S/S2(위성), DVB-T/T2(지상파), DVB-C(케이블) 등 다양한 디지털 방송 신호를 유연하게 수신합니다.</div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-item__icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg></div>
+          <div class="feature-item__body">
+            <div class="feature-item__title" id="pr-ft-1-t">고효율 트랜스모듈레이션</div>
+            <div class="feature-item__desc" id="pr-ft-1-d">수신한 디지털 방송 신호를 재압축 없이 DVB-C QAM 출력으로 변환하여 화질 열화 없이 케이블망에 배급합니다.</div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-item__icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg></div>
+          <div class="feature-item__body">
+            <div class="feature-item__title" id="pr-ft-2-t">원격 관리 및 NMS 통합</div>
+            <div class="feature-item__desc" id="pr-ft-2-d">웹 기반 GUI 및 SNMP 프로토콜을 통한 원격 모니터링·설정이 가능하며, Teleste NMS와 통합 운용됩니다.</div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-item__icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+          <div class="feature-item__body">
+            <div class="feature-item__title" id="pr-ft-3-t">고가용성 설계</div>
+            <div class="feature-item__desc" id="pr-ft-3-d">이중화 전원 공급 옵션 및 핫 스왑 모듈 지원으로 방송 서비스의 연속성을 보장합니다.</div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-item__icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg></div>
+          <div class="feature-item__body">
+            <div class="feature-item__title" id="pr-ft-4-t">컴팩트 1U 폼팩터</div>
+            <div class="feature-item__desc" id="pr-ft-4-d">표준 19인치 랙 1U 공간에 4채널 헤드엔드 기능을 모두 탑재하여 기계실 공간을 최소화합니다.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="specs">
+  <div class="container">
+    <span class="label">기술 사양</span>
+    <h2 class="section-title">상세 기술 규격</h2>
+    <p class="section-desc">Luminato 4×4 디지털 헤드엔드의 주요 기술 사양입니다.</p>
+    <div class="specs__grid" id="specs-grid">
+      <div class="spec-group"><div class="spec-group__header"><div class="spec-group__title">입력 사양</div></div><table class="spec-table"><tr><td>입력 채널 수</td><td>4채널</td></tr><tr><td>입력 인터페이스</td><td>F-type / IEC 커넥터</td></tr><tr><td>지원 신호</td><td>DVB-S/S2, DVB-T/T2, DVB-C</td></tr><tr><td>입력 레벨</td><td>–65 ~ –25 dBm</td></tr><tr><td>입력 임피던스</td><td>75 Ω</td></tr></table></div>
+      <div class="spec-group"><div class="spec-group__header"><div class="spec-group__title">출력 사양</div></div><table class="spec-table"><tr><td>출력 채널 수</td><td>4채널</td></tr><tr><td>출력 방식</td><td>DVB-C QAM 변조</td></tr><tr><td>변조 방식</td><td>16/32/64/128/256-QAM</td></tr><tr><td>출력 주파수</td><td>47 ~ 862 MHz</td></tr><tr><td>출력 레벨</td><td>최대 +102 dBμV</td></tr></table></div>
+      <div class="spec-group"><div class="spec-group__header"><div class="spec-group__title">관리 및 인터페이스</div></div><table class="spec-table"><tr><td>관리 포트</td><td>RJ-45 이더넷</td></tr><tr><td>관리 방식</td><td>웹 GUI, SNMP v2/v3</td></tr><tr><td>NMS 연동</td><td>Teleste NMS 지원</td></tr><tr><td>펌웨어 업데이트</td><td>원격 업데이트 지원</td></tr><tr><td>알람 기능</td><td>SNMP 트랩, 이메일</td></tr></table></div>
+      <div class="spec-group"><div class="spec-group__header"><div class="spec-group__title">환경 및 전원</div></div><table class="spec-table"><tr><td>폼팩터</td><td>1U 19인치 랙 마운트</td></tr><tr><td>전원</td><td>AC 90–264 V, 50/60 Hz</td></tr><tr><td>소비전력</td><td>최대 50 W</td></tr><tr><td>동작 온도</td><td>0 ~ +50 °C</td></tr><tr><td>저장 온도</td><td>–20 ~ +70 °C</td></tr></table></div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section" id="contact">
+  <div class="cta-section__bg"></div>
+  <div class="container cta-section__inner">
+    <h2 class="cta-section__title" id="cta-title">지금 바로 문의하세요</h2>
+    <p class="cta-section__desc" id="cta-desc">제품 도입 상담, 견적 요청, 기술 지원까지 상효가 함께합니다.</p>
+    <div class="contact-info">
+      <div class="contact-row">
+        <span class="contact-row__label">이메일</span>
+        <span class="contact-row__value" id="ct-email">sanghyo.com@gmail.com</span>
+      </div>
+      <div class="contact-row">
+        <span class="contact-row__label">웹사이트</span>
+        <span class="contact-row__value" id="ct-web"><a href="https://sanghyo.com" target="_blank" rel="noopener">sanghyo.com</a></span>
+      </div>
+      <div class="contact-row">
+        <span class="contact-row__label">주소</span>
+        <span class="contact-row__value" id="ct-addr">인천광역시 영종구 하늘중앙로 197, 102호</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer__inner">
+      <div class="footer__top">
+        <div>
+          <div class="footer__logo-name" id="ft-name-ko">주식회사 상효</div>
+          <div class="footer__logo-en" id="ft-name-en">SANGHYO CO., LTD.</div>
+        </div>
+        <div class="footer__biz">
+          <span id="ft-rep">대표자: 은진기</span>
+          <span id="ft-biz">사업자등록번호: 128-88-03768</span>
+          <span id="ft-addr">인천광역시 영종구 하늘중앙로 197, 102호(중산동)</span>
+        </div>
+      </div>
+      <div class="footer__divider"></div>
+      <div class="footer__bottom">
+        <span id="ft-copy">© 2024 주식회사 상효. All rights reserved.</span>
+        <span id="ft-domain">sanghyo.com</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+(async () => {
+  try {
+    const c = await fetch('/api/content').then(r => { if (!r.ok) throw 0; return r.json(); });
+    const ge = id => document.getElementById(id);
+    const txt = (id, v) => { const e = ge(id); if (e) e.textContent = v || ''; };
+    const htm = (id, v) => { const e = ge(id); if (e) e.innerHTML = v || ''; };
+    const esc = s => String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    const nl2br = s => esc(s).replace(/\n/g, '<br>');
+
+    txt('nav-name-ko', c.company.nameKo);
+    txt('nav-name-en', c.company.nameEn);
+    txt('hero-badge', c.hero.badge);
+    txt('hero-t1', c.hero.titleLine1);
+    txt('hero-t2', c.hero.titleLine2);
+    txt('hero-desc', c.hero.desc);
+    (c.hero.stats || []).forEach((s, i) => { txt(`stat-${i}-n`, s.num); txt(`stat-${i}-l`, s.label); });
+
+    txt('ab-lbl', c.about.sectionLabel);
+    htm('ab-title', nl2br(c.about.title));
+    txt('ab-desc', c.about.desc);
+    (c.about.features || []).forEach((f, i) => { txt(`ab-ft-${i}-t`, f.title); txt(`ab-ft-${i}-d`, f.desc); });
+
+    txt('pr-lbl', c.product.sectionLabel);
+    htm('pr-title', nl2br(c.product.title));
+    txt('pr-desc', c.product.desc);
+    txt('pr-model', c.product.model);
+    htm('pr-name', nl2br(c.product.name));
+    txt('pr-tagline', c.product.tagline);
+    const tagsEl = ge('pr-tags');
+    if (tagsEl) tagsEl.innerHTML = (c.product.tags || []).map(t => `<span class="tag">${esc(t)}</span>`).join('');
+    (c.product.features || []).forEach((f, i) => { txt(`pr-ft-${i}-t`, f.title); txt(`pr-ft-${i}-d`, f.desc); });
+
+    const sg = ge('specs-grid');
+    if (sg && c.specs) {
+      sg.innerHTML = c.specs.map(g => `
+        <div class="spec-group">
+          <div class="spec-group__header"><div class="spec-group__title">${esc(g.group)}</div></div>
+          <table class="spec-table">${(g.rows||[]).map(r=>`<tr><td>${esc(r.label)}</td><td>${esc(r.value)}</td></tr>`).join('')}</table>
+        </div>`).join('');
+    }
+
+    txt('cta-title', c.cta.title);
+    txt('cta-desc', c.cta.desc);
+    txt('ct-email', c.company.email);
+    const ctWeb = ge('ct-web');
+    if (ctWeb) ctWeb.innerHTML = `<a href="https://${esc(c.company.website)}" target="_blank" rel="noopener">${esc(c.company.website)}</a>`;
+    txt('ct-addr', c.company.address);
+    txt('ft-name-ko', c.company.nameKo);
+    txt('ft-name-en', c.company.nameEn);
+    txt('ft-rep', `대표자: ${c.company.representative}`);
+    txt('ft-biz', `사업자등록번호: ${c.company.businessNumber}`);
+    txt('ft-addr', c.company.address);
+    txt('ft-copy', `© 2024 ${c.company.nameKo}. All rights reserved.`);
+    txt('ft-domain', c.company.website);
+  } catch (_) { /* use hardcoded defaults */ }
+})();
+</script>
+</body>
+</html>

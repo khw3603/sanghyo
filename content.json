@@ -1,0 +1,119 @@
+{
+  "company": {
+    "nameKo": "주식회사 상효",
+    "nameEn": "SANGHYO CO., LTD.",
+    "representative": "은진기",
+    "businessNumber": "128-88-03768",
+    "address": "인천광역시 영종구 하늘중앙로 197, 102호(중산동)",
+    "email": "sanghyo.com@gmail.com",
+    "website": "sanghyo.com"
+  },
+  "hero": {
+    "badge": "Teleste 공식 파트너사",
+    "titleLine1": "디지털 방송의 미래를",
+    "titleLine2": "신뢰할 수 있는 기술로",
+    "desc": "주식회사 상효는 디지털 방송 헤드엔드 장비 전문 공급사입니다. Teleste Luminato 플랫폼을 통해 안정적인 방송 인프라 구축을 지원합니다.",
+    "stats": [
+      { "num": "4×4", "label": "채널 구성" },
+      { "num": "1U", "label": "랙 마운트" },
+      { "num": "DVB", "label": "위성 수신" },
+      { "num": "QAM", "label": "케이블 출력" }
+    ]
+  },
+  "about": {
+    "sectionLabel": "회사 소개",
+    "title": "방송 인프라 전문 기업,\n주식회사 상효",
+    "desc": "인천 영종도에 위치한 주식회사 상효는 디지털 방송 헤드엔드 장비의 공급·설치·유지보수를 전문으로 하는 기술 기업입니다. Teleste사의 공식 파트너로서 고객에게 최적화된 방송 솔루션을 제공합니다.",
+    "features": [
+      {
+        "title": "글로벌 브랜드 공식 파트너",
+        "desc": "핀란드 Teleste사의 Luminato 헤드엔드 플랫폼 공식 공급사로, 정품 장비와 전문 기술 지원을 제공합니다."
+      },
+      {
+        "title": "신속한 기술 지원",
+        "desc": "장비 도입부터 설치, 운용, 유지보수까지 전 주기에 걸친 기술 서비스를 제공합니다."
+      },
+      {
+        "title": "맞춤형 방송 솔루션",
+        "desc": "케이블 SO, 위성방송사, 호텔·병원 등 다양한 고객 환경에 맞는 최적 솔루션을 설계합니다."
+      }
+    ]
+  },
+  "product": {
+    "sectionLabel": "제품 소개",
+    "title": "Teleste Luminato\n4×4 디지털 헤드엔드",
+    "desc": "소형 방송국 및 케이블 오퍼레이터를 위한 고밀도 디지털 헤드엔드 솔루션입니다. 4채널 입력과 4채널 출력을 하나의 1U 섀시에 집약하였습니다.",
+    "model": "Teleste · Luminato Platform",
+    "name": "Luminato 4×4\n디지털 헤드엔드",
+    "tagline": "4채널 DVB 입력 신호를 수신하여 4채널 QAM 케이블 신호로 변환·출력하는 고성능 디지털 헤드엔드 장비입니다. 1U 랙 마운트 폼팩터로 공간 효율이 뛰어납니다.",
+    "tags": ["DVB-S/S2", "DVB-T/T2", "QAM 변조", "1U 랙", "IP 관리"],
+    "features": [
+      {
+        "title": "다중 입력 신호 지원",
+        "desc": "DVB-S/S2(위성), DVB-T/T2(지상파), DVB-C(케이블) 등 다양한 디지털 방송 신호를 유연하게 수신합니다."
+      },
+      {
+        "title": "고효율 트랜스모듈레이션",
+        "desc": "수신한 디지털 방송 신호를 재압축 없이 DVB-C QAM 출력으로 변환하여 화질 열화 없이 케이블망에 배급합니다."
+      },
+      {
+        "title": "원격 관리 및 NMS 통합",
+        "desc": "웹 기반 GUI 및 SNMP 프로토콜을 통한 원격 모니터링·설정이 가능하며, Teleste NMS와 통합 운용됩니다."
+      },
+      {
+        "title": "고가용성 설계",
+        "desc": "이중화 전원 공급 옵션 및 핫 스왑 모듈 지원으로 방송 서비스의 연속성을 보장합니다."
+      },
+      {
+        "title": "컴팩트 1U 폼팩터",
+        "desc": "표준 19인치 랙 1U 공간에 4채널 헤드엔드 기능을 모두 탑재하여 기계실 공간을 최소화합니다."
+      }
+    ]
+  },
+  "specs": [
+    {
+      "group": "입력 사양",
+      "rows": [
+        { "label": "입력 채널 수", "value": "4채널" },
+        { "label": "입력 인터페이스", "value": "F-type / IEC 커넥터" },
+        { "label": "지원 신호", "value": "DVB-S/S2, DVB-T/T2, DVB-C" },
+        { "label": "입력 레벨", "value": "–65 ~ –25 dBm" },
+        { "label": "입력 임피던스", "value": "75 Ω" }
+      ]
+    },
+    {
+      "group": "출력 사양",
+      "rows": [
+        { "label": "출력 채널 수", "value": "4채널" },
+        { "label": "출력 방식", "value": "DVB-C QAM 변조" },
+        { "label": "변조 방식", "value": "16/32/64/128/256-QAM" },
+        { "label": "출력 주파수", "value": "47 ~ 862 MHz" },
+        { "label": "출력 레벨", "value": "최대 +102 dBμV" }
+      ]
+    },
+    {
+      "group": "관리 및 인터페이스",
+      "rows": [
+        { "label": "관리 포트", "value": "RJ-45 이더넷" },
+        { "label": "관리 방식", "value": "웹 GUI, SNMP v2/v3" },
+        { "label": "NMS 연동", "value": "Teleste NMS 지원" },
+        { "label": "펌웨어 업데이트", "value": "원격 업데이트 지원" },
+        { "label": "알람 기능", "value": "SNMP 트랩, 이메일" }
+      ]
+    },
+    {
+      "group": "환경 및 전원",
+      "rows": [
+        { "label": "폼팩터", "value": "1U 19인치 랙 마운트" },
+        { "label": "전원", "value": "AC 90–264 V, 50/60 Hz" },
+        { "label": "소비전력", "value": "최대 50 W" },
+        { "label": "동작 온도", "value": "0 ~ +50 °C" },
+        { "label": "저장 온도", "value": "–20 ~ +70 °C" }
+      ]
+    }
+  ],
+  "cta": {
+    "title": "지금 바로 문의하세요",
+    "desc": "제품 도입 상담, 견적 요청, 기술 지원까지 상효가 함께합니다."
+  }
+}

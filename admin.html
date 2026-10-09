@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>관리자 — 주식회사 상효</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #07101F;
+      --surface: #0D1929;
+      --surface-2: #132035;
+      --border: #1C2E47;
+      --border-focus: #3A72E0;
+      --text: #C8DDF5;
+      --text-dim: #8AAAC8;
+      --muted: #4E6A88;
+      --accent: #3A72E0;
+      --accent-dim: rgba(58,114,224,0.12);
+      --success: #34D399;
+      --success-dim: rgba(52,211,153,0.1);
+      --danger: #F87171;
+      --danger-dim: rgba(248,113,113,0.1);
+      --warning: #FBBF24;
+      --sidebar-w: 210px;
+      --header-h: 56px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body { font-family: 'Noto Sans KR', system-ui, sans-serif; font-size: 13px; background: var(--bg); color: var(--text); line-height: 1.5; }
+
+    /* ── Login ── */
+    #login-screen {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 16px;
+      background: radial-gradient(ellipse at top, #0D1E3A 0%, var(--bg) 60%);
+    }
+    .login-card {
+      width: 100%; max-width: 360px; background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; padding: 40px 32px;
+    }
+    .login-logo { text-align: center; margin-bottom: 36px; }
+    .login-logo__icon {
+      width: 48px; height: 48px; border-radius: 12px; background: var(--accent-dim);
+      border: 1px solid var(--border-focus); margin: 0 auto 14px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .login-logo__name { font-size: 1.15rem; font-weight: 700; color: var(--text); }
+    .login-logo__sub { font-size: 0.72rem; color: var(--muted); margin-top: 3px; letter-spacing: 0.08em; }
+    .f-group { margin-bottom: 18px; }
+    .f-label { display: block; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 7px; }
+    .f-input {
+      width: 100%; background: var(--surface-2); border: 1px solid var(--border); border-radius: 7px;
+      padding: 9px 13px; font-family: inherit; font-size: 0.875rem; color: var(--text); outline: none;
+      transition: border-color 0.15s;
+    }
+    .f-input:focus { border-color: var(--border-focus); }
+    textarea.f-input { resize: vertical; min-height: 72px; line-height: 1.6; }
+    .login-btn {
+      width: 100%; padding: 11px; background: var(--accent); color: #fff; border: none;
+      border-radius: 7px; font-family: inherit; font-size: 0.9rem; font-weight: 600;
+      cursor: pointer; transition: opacity 0.15s; margin-top: 4px;
+    }
+    .login-btn:hover { opacity: 0.85; }
+    .login-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+    .login-error {
+      margin-top: 12px; padding: 9px 13px; background: var(--danger-dim);
+      border: 1px solid rgba(248,113,113,0.25); border-radius: 6px;
+      font-size: 0.83rem; color: var(--danger); display: none;
+    }
+
+    /* ── App shell ── */
+    #app { display: none; flex-direction: column; height: 100vh; }
+    #app.visible { display: flex; }
+
+    /* ── Header ── */
+    .adm-header {
+      height: var(--header-h); background: var(--surface); border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between; padding: 0 20px;
+      flex-shrink: 0; gap: 12px;
+    }
+    .adm-header__brand { font-weight: 700; font-size: 0.95rem; white-space: nowrap; }
+    .adm-header__brand small { font-size: 0.72rem; font-weight: 400; color: var(--muted); margin-left: 8px; }
+    .adm-header__right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+    .save-indicator { font-size: 0.75rem; padding: 4px 10px; border-radius: 4px; transition: all 0.2s; }
+    .save-indicator.saving { color: var(--accent); }
+    .save-indicator.saved { color: var(--success); background: var(--success-dim); }
+    .save-indicator.error { color: var(--danger); background: var(--danger-dim); }
+    .btn-h {
+      padding: 6px 14px; border-radius: 6px; font-family: inherit; font-size: 0.8rem; font-weight: 600;
+      cursor: pointer; border: none; transition: all 0.15s; white-space: nowrap;
+    }
+    .btn-preview { background: var(--surface-2); border: 1px solid var(--border); color: var(--text-dim); }
+    .btn-preview:hover { color: var(--text); border-color: var(--text-dim); }
+    .btn-save { background: var(--accent); color: #fff; }
+    .btn-save:hover { opacity: 0.85; }
+    .btn-save:disabled { opacity: 0.45; cursor: not-allowed; }
+    .btn-logout { background: transparent; border: 1px solid var(--border); color: var(--muted); }
+    .btn-logout:hover { color: var(--danger); border-color: var(--danger); }
+
+    /* ── Body ── */
+    .adm-body { display: flex; flex: 1; overflow: hidden; }
+
+    /* ── Sidebar ── */
+    .adm-sidebar {
+      width: var(--sidebar-w); background: var(--surface); border-right: 1px solid var(--border);
+      flex-shrink: 0; overflow-y: auto; padding: 16px 10px;
+    }
+    .sidebar-group-label {
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--muted); padding: 8px 8px 4px;
+    }
+    .sidebar-item {
+      display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 7px;
+      font-size: 0.83rem; font-weight: 500; color: var(--text-dim); text-decoration: none;
+      transition: background 0.12s, color 0.12s; cursor: pointer; margin-bottom: 2px;
+    }
+    .sidebar-item:hover { background: var(--accent-dim); color: var(--text); }
+    .sidebar-item.active { background: var(--accent-dim); color: var(--accent); }
+    .sidebar-item .icon { width: 18px; text-align: center; flex-shrink: 0; }
+
+    /* ── Main ── */
+    .adm-main { flex: 1; overflow-y: auto; padding: 32px; }
+
+    /* ── Sections ── */
+    .edit-section { max-width: 760px; margin-bottom: 56px; scroll-margin-top: 24px; }
+    .section-head { margin-bottom: 24px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
+    .section-head__title { font-size: 1rem; font-weight: 700; color: var(--text); }
+    .section-head__desc { font-size: 0.78rem; color: var(--muted); margin-top: 3px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+    .f-hint { font-size: 0.68rem; color: var(--muted); margin-top: 4px; }
+
+    /* ── Sub-cards (features) ── */
+    .sub-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+      padding: 14px 16px; margin-bottom: 10px;
+    }
+    .sub-card__hd { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+
+    /* ── Stat cards (hero) ── */
+    .stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .stat-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+      padding: 14px; display: flex; flex-direction: column; gap: 10px;
+    }
+    .stat-card__lbl { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+
+    /* ── Spec groups ── */
+    .spec-group-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+      padding: 16px; margin-bottom: 16px;
+    }
+    .spec-rows-list { margin: 12px 0 10px; display: flex; flex-direction: column; gap: 7px; }
+    .spec-row-item {
+      display: grid; grid-template-columns: 1fr 1fr 28px; gap: 7px; align-items: center;
+    }
+    .btn-rm {
+      width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
+      background: transparent; border: 1px solid var(--border); border-radius: 5px;
+      color: var(--muted); cursor: pointer; font-size: 15px; transition: all 0.12s; flex-shrink: 0;
+    }
+    .btn-rm:hover { background: var(--danger-dim); border-color: var(--danger); color: var(--danger); }
+    .btn-add-row {
+      display: inline-flex; align-items: center; gap: 5px; padding: 6px 12px;
+      background: transparent; border: 1px dashed var(--border); border-radius: 6px;
+      color: var(--muted); font-family: inherit; font-size: 0.78rem; cursor: pointer; transition: all 0.12s;
+    }
+    .btn-add-row:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed; bottom: 24px; right: 24px; padding: 11px 18px; border-radius: 8px;
+      font-size: 0.83rem; font-weight: 500; z-index: 9999; pointer-events: none;
+      transform: translateY(12px); opacity: 0; transition: all 0.22s;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.ok { background: #063A27; color: var(--success); border: 1px solid rgba(52,211,153,0.25); }
+    .toast.err { background: #3A0A0A; color: var(--danger); border: 1px solid rgba(248,113,113,0.25); }
+
+    @media (max-width: 680px) {
+      .adm-sidebar { display: none; }
+      .adm-main { padding: 16px; }
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      .stats-row { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Login -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">
+      <img src="/logo.png" alt="상효 로고" style="height:72px;width:auto;margin:0 auto 12px;display:block;" />
+      <div class="login-logo__name">주식회사 상효</div>
+      <div class="login-logo__sub">관리자 패널</div>
+    </div>
+    <div class="f-group">
+      <label class="f-label" for="pwd">비밀번호</label>
+      <input class="f-input" type="password" id="pwd" placeholder="••••••••" autocomplete="current-password" />
+    </div>
+    <button class="login-btn" id="login-btn" onclick="doLogin()">로그인</button>
+    <div class="login-error" id="login-err"></div>
+  </div>
+</div>
+
+<!-- App -->
+<div id="app">
+  <header class="adm-header">
+    <div class="adm-header__brand">관리자 페이지 <small>주식회사 상효</small></div>
+    <div class="adm-header__right">
+      <span class="save-indicator" id="save-ind"></span>
+      <button class="btn-h btn-preview" onclick="window.open('/', '_blank')">미리보기 ↗</button>
+      <button class="btn-h btn-save" id="save-btn" onclick="doSave()">저장</button>
+      <button class="btn-h btn-logout" onclick="doLogout()">로그아웃</button>
+    </div>
+  </header>
+  <div class="adm-body">
+    <nav class="adm-sidebar" id="sidebar">
+      <div class="sidebar-group-label">콘텐츠 섹션</div>
+      <a class="sidebar-item" href="#s-company" onclick="setActive(this)"><span class="icon">🏢</span> 회사 정보</a>
+      <a class="sidebar-item" href="#s-hero" onclick="setActive(this)"><span class="icon">✦</span> 히어로</a>
+      <a class="sidebar-item" href="#s-about" onclick="setActive(this)"><span class="icon">📋</span> 회사 소개</a>
+      <a class="sidebar-item" href="#s-product" onclick="setActive(this)"><span class="icon">📡</span> 제품 소개</a>
+      <a class="sidebar-item" href="#s-specs" onclick="setActive(this)"><span class="icon">🔧</span> 기술 사양</a>
+      <a class="sidebar-item" href="#s-cta" onclick="setActive(this)"><span class="icon">📬</span> 문의 섹션</a>
+    </nav>
+    <main class="adm-main" id="adm-main"></main>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let token = localStorage.getItem('adm_token') || '';
+let specState = [];
+
+// ── Auth ──────────────────────────────────────────────
+async function doLogin() {
+  const btn = document.getElementById('login-btn');
+  const errEl = document.getElementById('login-err');
+  const pwd = document.getElementById('pwd').value;
+  btn.disabled = true; btn.textContent = '확인 중...'; errEl.style.display = 'none';
+  try {
+    const r = await fetch('/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: pwd })
+    });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.error || '로그인 실패');
+    token = d.token;
+    localStorage.setItem('adm_token', token);
+    await initApp();
+  } catch (e) {
+    errEl.textContent = e.message;
+    errEl.style.display = 'block';
+  } finally {
+    btn.disabled = false; btn.textContent = '로그인';
+  }
+}
+
+async function doLogout() {
+  try { await fetch('/api/logout', { method: 'POST', headers: { 'x-token': token } }); } catch (_) {}
+  token = ''; localStorage.removeItem('adm_token');
+  document.getElementById('app').classList.remove('visible');
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('pwd').value = '';
+}
+
+document.getElementById('pwd').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+// ── Init ──────────────────────────────────────────────
+async function initApp() {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').classList.add('visible');
+  const c = await loadContent();
+  renderAll(c);
+}
+
+async function loadContent() {
+  const r = await fetch('/api/content');
+  if (!r.ok) throw new Error('콘텐츠 로딩 실패');
+  return r.json();
+}
+
+// ── Save ──────────────────────────────────────────────
+async function doSave() {
+  const btn = document.getElementById('save-btn');
+  const ind = document.getElementById('save-ind');
+  btn.disabled = true;
+  ind.className = 'save-indicator saving'; ind.textContent = '저장 중...';
+  try {
+    const data = collectFormData();
+    const r = await fetch('/api/content', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-token': token },
+      body: JSON.stringify(data)
+    });
+    const d = await r.json();
+    if (!r.ok) {
+      if (r.status === 401) { showToast('세션이 만료됐습니다. 다시 로그인해주세요.', 'err'); doLogout(); return; }
+      throw new Error(d.error || '저장 실패');
+    }
+    ind.className = 'save-indicator saved'; ind.textContent = '✓ 저장됨';
+    showToast('저장되었습니다.', 'ok');
+    setTimeout(() => { ind.className = 'save-indicator'; ind.textContent = ''; }, 3000);
+  } catch (e) {
+    ind.className = 'save-indicator error'; ind.textContent = '저장 실패';
+    showToast(e.message, 'err');
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+// ── Collect form data ──────────────────────────────────
+function val(id) { const e = document.getElementById(id); return e ? e.value.trim() : ''; }
+
+function collectFormData() {
+  return {
+    company: {
+      nameKo: val('c-nameKo'), nameEn: val('c-nameEn'),
+      representative: val('c-rep'), businessNumber: val('c-biz'),
+      address: val('c-addr'), email: val('c-email'), website: val('c-web')
+    },
+    hero: {
+      badge: val('h-badge'), titleLine1: val('h-t1'), titleLine2: val('h-t2'),
+      desc: val('h-desc'),
+      stats: [0,1,2,3].map(i => ({ num: val(`h-s${i}n`), label: val(`h-s${i}l`) }))
+    },
+    about: {
+      sectionLabel: val('a-lbl'), title: val('a-title'), desc: val('a-desc'),
+      features: [0,1,2].map(i => ({ title: val(`a-f${i}t`), desc: val(`a-f${i}d`) }))
+    },
+    product: {
+      sectionLabel: val('p-lbl'), title: val('p-title'), desc: val('p-desc'),
+      model: val('p-model'), name: val('p-name'), tagline: val('p-tagline'),
+      tags: val('p-tags').split(',').map(t => t.trim()).filter(Boolean),
+      features: [0,1,2,3,4].map(i => ({ title: val(`p-f${i}t`), desc: val(`p-f${i}d`) }))
+    },
+    specs: specState,
+    cta: { title: val('cta-t'), desc: val('cta-d') }
+  };
+}
+
+// ── Render all sections ───────────────────────────────
+function renderAll(c) {
+  specState = JSON.parse(JSON.stringify(c.specs || []));
+  document.getElementById('adm-main').innerHTML =
+    renderCompany(c) + renderHero(c) + renderAbout(c) + renderProduct(c) + renderSpecsSection() + renderCta(c);
+}
+
+const fld = (label, id, val, hint) => `
+  <div class="f-group">
+    <label class="f-label" for="${id}">${label}</label>
+    <input class="f-input" type="text" id="${id}" value="${esc(val)}" />
+    ${hint ? `<div class="f-hint">${hint}</div>` : ''}
+  </div>`;
+
+const txa = (label, id, val) => `
+  <div class="f-group">
+    <label class="f-label" for="${id}">${label}</label>
+    <textarea class="f-input" id="${id}" rows="3">${esc(val)}</textarea>
+  </div>`;
+
+const esc = s => String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+function renderCompany(c) {
+  const co = c.company;
+  return `<div class="edit-section" id="s-company">
+    <div class="section-head"><div class="section-head__title">🏢 회사 정보</div><div class="section-head__desc">네비게이션, 문의 섹션, 푸터에 표시됩니다.</div></div>
+    <div class="grid-2">
+      ${fld('회사명 (한글)', 'c-nameKo', co.nameKo)}
+      ${fld('회사명 (영문)', 'c-nameEn', co.nameEn)}
+      ${fld('대표자', 'c-rep', co.representative)}
+      ${fld('사업자등록번호', 'c-biz', co.businessNumber)}
+      ${fld('이메일', 'c-email', co.email)}
+      ${fld('웹사이트', 'c-web', co.website, 'https:// 없이 입력 (예: sanghyo.com)')}
+    </div>
+    ${fld('주소', 'c-addr', co.address)}
+  </div>`;
+}
+
+function renderHero(c) {
+  const h = c.hero;
+  const statsHtml = h.stats.map((s, i) => `
+    <div class="stat-card">
+      <div class="stat-card__lbl">통계 ${i+1}</div>
+      ${fld('숫자/기호', `h-s${i}n`, s.num)}
+      ${fld('레이블', `h-s${i}l`, s.label)}
+    </div>`).join('');
+  return `<div class="edit-section" id="s-hero">
+    <div class="section-head"><div class="section-head__title">✦ 히어로 섹션</div><div class="section-head__desc">페이지 맨 위 메인 배너 영역입니다.</div></div>
+    ${fld('뱃지 텍스트', 'h-badge', h.badge)}
+    <div class="grid-2">
+      ${fld('제목 1행', 'h-t1', h.titleLine1)}
+      ${fld('제목 2행 (파란색 강조)', 'h-t2', h.titleLine2)}
+    </div>
+    ${txa('설명 문구', 'h-desc', h.desc)}
+    <div class="f-group">
+      <div class="f-label">하단 통계 (4개)</div>
+      <div class="stats-row">${statsHtml}</div>
+    </div>
+  </div>`;
+}
+
+function renderAbout(c) {
+  const a = c.about;
+  const featsHtml = a.features.map((f, i) => `
+    <div class="sub-card">
+      <div class="sub-card__hd">특징 ${i+1}</div>
+      ${fld('제목', `a-f${i}t`, f.title)}
+      ${txa('설명', `a-f${i}d`, f.desc)}
+    </div>`).join('');
+  return `<div class="edit-section" id="s-about">
+    <div class="section-head"><div class="section-head__title">📋 회사 소개 섹션</div><div class="section-head__desc">회사 강점 3가지를 소개하는 섹션입니다.</div></div>
+    ${fld('섹션 레이블', 'a-lbl', a.sectionLabel)}
+    ${txa('섹션 제목 (줄 바꿈: Enter)', 'a-title', a.title)}
+    ${txa('섹션 설명', 'a-desc', a.desc)}
+    <div class="f-group">
+      <div class="f-label">특징 항목 (3개 고정)</div>
+      ${featsHtml}
+    </div>
+  </div>`;
+}
+
+function renderProduct(c) {
+  const p = c.product;
+  const featsHtml = p.features.map((f, i) => `
+    <div class="sub-card">
+      <div class="sub-card__hd">특징 ${i+1}</div>
+      ${fld('제목', `p-f${i}t`, f.title)}
+      ${txa('설명', `p-f${i}d`, f.desc)}
+    </div>`).join('');
+  return `<div class="edit-section" id="s-product">
+    <div class="section-head"><div class="section-head__title">📡 제품 소개 섹션</div><div class="section-head__desc">Luminato 4×4 제품 상세 소개 섹션입니다.</div></div>
+    <div class="grid-2">
+      ${fld('섹션 레이블', 'p-lbl', p.sectionLabel)}
+      ${fld('제품 모델명', 'p-model', p.model)}
+    </div>
+    ${txa('섹션 제목 (줄 바꿈: Enter)', 'p-title', p.title)}
+    ${txa('섹션 설명', 'p-desc', p.desc)}
+    ${txa('제품명 (줄 바꿈: Enter)', 'p-name', p.name)}
+    ${txa('제품 설명 (카드 내)', 'p-tagline', p.tagline)}
+    ${fld('태그', 'p-tags', (p.tags||[]).join(', '), '쉼표(,)로 구분. 예: DVB-S/S2, QAM 변조, 1U 랙')}
+    <div class="f-group">
+      <div class="f-label">제품 특징 항목 (5개 고정)</div>
+      ${featsHtml}
+    </div>
+  </div>`;
+}
+
+function renderSpecsSection() {
+  const groupsHtml = specState.map((grp, gi) => renderSpecGroup(grp, gi)).join('');
+  return `<div class="edit-section" id="s-specs">
+    <div class="section-head"><div class="section-head__title">🔧 기술 사양 섹션</div><div class="section-head__desc">스펙 표입니다. 각 그룹 내 항목을 추가하거나 삭제할 수 있습니다.</div></div>
+    <div id="specs-editor">${groupsHtml}</div>
+  </div>`;
+}
+
+function renderSpecGroup(grp, gi) {
+  const rowsHtml = grp.rows.map((row, ri) => renderSpecRow(gi, ri, row)).join('');
+  return `<div class="spec-group-card">
+    ${fld(`그룹 ${gi+1} 제목`, `sg-${gi}-t`, grp.group)}
+    <div class="f-group" style="margin-bottom:6px;">
+      <div class="f-label">항목 (레이블 / 값)</div>
+      <div class="spec-rows-list" id="spec-rows-${gi}">${rowsHtml}</div>
+      <button class="btn-add-row" onclick="addSpecRow(${gi})">＋ 항목 추가</button>
+    </div>
+  </div>`;
+}
+
+function renderSpecRow(gi, ri, row) {
+  return `<div class="spec-row-item" id="spec-row-${gi}-${ri}">
+    <input class="f-input" placeholder="항목명" value="${esc(row.label)}"
+      oninput="specState[${gi}].rows[${ri}].label=this.value" />
+    <input class="f-input" placeholder="값" value="${esc(row.value)}"
+      oninput="specState[${gi}].rows[${ri}].value=this.value" />
+    <button class="btn-rm" onclick="removeSpecRow(${gi},${ri})" title="삭제">×</button>
+  </div>`;
+}
+
+function addSpecRow(gi) {
+  specState[gi].rows.push({ label: '', value: '' });
+  rerenderSpecRows(gi);
+}
+
+function removeSpecRow(gi, ri) {
+  specState[gi].rows.splice(ri, 1);
+  rerenderSpecRows(gi);
+}
+
+function rerenderSpecRows(gi) {
+  const container = document.getElementById(`spec-rows-${gi}`);
+  if (container) {
+    container.innerHTML = specState[gi].rows.map((row, ri) => renderSpecRow(gi, ri, row)).join('');
+  }
+  // sync group title input to specState
+  const titleInput = document.getElementById(`sg-${gi}-t`);
+  if (titleInput) specState[gi].group = titleInput.value;
+}
+
+function renderCta(c) {
+  return `<div class="edit-section" id="s-cta">
+    <div class="section-head"><div class="section-head__title">📬 문의 섹션</div><div class="section-head__desc">페이지 하단 CTA 섹션입니다. 연락처는 회사 정보에서 수정하세요.</div></div>
+    ${fld('제목', 'cta-t', c.cta.title)}
+    ${txa('설명 문구', 'cta-d', c.cta.desc)}
+  </div>`;
+}
+
+// ── Sidebar active ────────────────────────────────────
+function setActive(el) {
+  document.querySelectorAll('.sidebar-item').forEach(a => a.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// Highlight active on scroll
+const adm = document.getElementById('adm-main');
+if (adm) {
+  adm.addEventListener('scroll', () => {
+    const sections = document.querySelectorAll('.edit-section');
+    let current = null;
+    sections.forEach(s => {
+      if (s.offsetTop - 60 <= adm.scrollTop) current = s.id;
+    });
+    if (current) {
+      document.querySelectorAll('.sidebar-item').forEach(a => {
+        a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+      });
+    }
+  });
+}
+
+// ── Toast ─────────────────────────────────────────────
+function showToast(msg, type = 'ok') {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = `toast ${type} show`;
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ── Boot ──────────────────────────────────────────────
+(async () => {
+  if (token) {
+    try {
+      await initApp();
+    } catch (_) {
+      token = ''; localStorage.removeItem('adm_token');
+    }
+  }
+})();
+</script>
+</body>
+</html>
