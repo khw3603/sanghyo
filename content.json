@@ -115,5 +115,9 @@
   "cta": {
     "title": "지금 바로 문의하세요",
     "desc": "제품 도입 상담, 견적 요청, 기술 지원까지 상효가 함께합니다."
+  },
+  "images": {
+    "logo": "/logo.png",
+    "product": null
   }
 }

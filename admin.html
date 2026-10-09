@@ -177,6 +177,42 @@
     .toast.ok { background: #063A27; color: var(--success); border: 1px solid rgba(52,211,153,0.25); }
     .toast.err { background: #3A0A0A; color: var(--danger); border: 1px solid rgba(248,113,113,0.25); }
 
+    /* ── Image upload ── */
+    .img-upload-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 8px; padding: 16px; margin-bottom: 14px;
+    }
+    .img-upload-card__lbl {
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--muted); margin-bottom: 12px;
+    }
+    .img-upload-row { display: flex; gap: 16px; align-items: flex-start; flex-wrap: wrap; }
+    .img-preview-box {
+      width: 130px; height: 100px; border-radius: 8px; border: 1px solid var(--border);
+      background: var(--surface-2); display: flex; align-items: center;
+      justify-content: center; overflow: hidden; flex-shrink: 0;
+    }
+    .img-preview-box img { max-width: 100%; max-height: 100%; object-fit: contain; }
+    .img-preview-box .no-img { font-size: 0.7rem; color: var(--muted); text-align: center; line-height: 1.6; padding: 8px; }
+    .img-upload-controls { flex: 1; min-width: 180px; display: flex; flex-direction: column; gap: 8px; }
+    .img-hint { font-size: 0.72rem; color: var(--muted); line-height: 1.5; }
+    .img-filename { font-size: 0.75rem; color: var(--text-dim); padding: 2px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; }
+    .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .btn-file {
+      padding: 7px 13px; background: var(--surface-2); border: 1px solid var(--border);
+      border-radius: 6px; color: var(--text-dim); font-family: inherit; font-size: 0.8rem;
+      font-weight: 500; cursor: pointer; transition: all 0.12s;
+    }
+    .btn-file:hover { border-color: var(--accent); color: var(--accent); }
+    .btn-upload-go {
+      padding: 7px 13px; background: var(--accent); border: none; border-radius: 6px;
+      color: #fff; font-family: inherit; font-size: 0.8rem; font-weight: 600;
+      cursor: pointer; transition: opacity 0.12s;
+    }
+    .btn-upload-go:hover { opacity: 0.85; }
+    .btn-upload-go:disabled { opacity: 0.4; cursor: not-allowed; }
+    .upload-progress { font-size: 0.75rem; color: var(--accent); display: none; }
+
     @media (max-width: 680px) {
       .adm-sidebar { display: none; }
       .adm-main { padding: 16px; }
@@ -218,6 +254,7 @@
   <div class="adm-body">
     <nav class="adm-sidebar" id="sidebar">
       <div class="sidebar-group-label">콘텐츠 섹션</div>
+      <a class="sidebar-item" href="#s-images" onclick="setActive(this)"><span class="icon">🖼️</span> 이미지 관리</a>
       <a class="sidebar-item" href="#s-company" onclick="setActive(this)"><span class="icon">🏢</span> 회사 정보</a>
       <a class="sidebar-item" href="#s-hero" onclick="setActive(this)"><span class="icon">✦</span> 히어로</a>
       <a class="sidebar-item" href="#s-about" onclick="setActive(this)"><span class="icon">📋</span> 회사 소개</a>
@@ -234,6 +271,7 @@
 <script>
 let token = localStorage.getItem('adm_token') || '';
 let specState = [];
+let imageState = { logo: '/logo.png', product: null };
 
 // ── Auth ──────────────────────────────────────────────
 async function doLogin() {
@@ -317,6 +355,11 @@ async function doSave() {
 function val(id) { const e = document.getElementById(id); return e ? e.value.trim() : ''; }
 
 function collectFormData() {
+  // 스펙 그룹 제목 최신화
+  specState.forEach((grp, gi) => {
+    const titleEl = document.getElementById(`sg-${gi}-t`);
+    if (titleEl) grp.group = titleEl.value.trim();
+  });
   return {
     company: {
       nameKo: val('c-nameKo'), nameEn: val('c-nameEn'),
@@ -339,15 +382,156 @@ function collectFormData() {
       features: [0,1,2,3,4].map(i => ({ title: val(`p-f${i}t`), desc: val(`p-f${i}d`) }))
     },
     specs: specState,
-    cta: { title: val('cta-t'), desc: val('cta-d') }
+    cta: { title: val('cta-t'), desc: val('cta-d') },
+    images: imageState
   };
 }
 
 // ── Render all sections ───────────────────────────────
 function renderAll(c) {
   specState = JSON.parse(JSON.stringify(c.specs || []));
+  imageState = Object.assign({ logo: '/logo.png', product: null }, c.images || {});
   document.getElementById('adm-main').innerHTML =
-    renderCompany(c) + renderHero(c) + renderAbout(c) + renderProduct(c) + renderSpecsSection() + renderCta(c);
+    renderImages() + renderCompany(c) + renderHero(c) + renderAbout(c) + renderProduct(c) + renderSpecsSection() + renderCta(c);
+}
+
+// ── Image section ──────────────────────────────────────
+function renderImages() {
+  const logoSrc = imageState.logo || '/logo.png';
+  const productSrc = imageState.product;
+  return `<div class="edit-section" id="s-images">
+    <div class="section-head">
+      <div class="section-head__title">🖼️ 이미지 관리</div>
+      <div class="section-head__desc">JPG, PNG, GIF, WebP, SVG 지원 · 최대 10MB</div>
+    </div>
+
+    <div class="img-upload-card">
+      <div class="img-upload-card__lbl">로고 이미지</div>
+      <div class="img-upload-row">
+        <div class="img-preview-box" style="background:#fff;">
+          <img id="preview-logo" src="${esc(logoSrc)}" alt="로고" />
+        </div>
+        <div class="img-upload-controls">
+          <div class="img-hint">네비게이션 바와 관리자 로그인 화면에 표시됩니다.</div>
+          <div class="img-filename" id="fname-logo">파일을 선택하세요</div>
+          <div class="btn-row">
+            <button class="btn-file" onclick="document.getElementById('file-logo').click()">📁 파일 선택</button>
+            <button class="btn-upload-go" id="ubtn-logo" disabled onclick="uploadImage('logo')">업로드</button>
+          </div>
+          <div class="upload-progress" id="prog-logo">업로드 중...</div>
+          <input type="file" id="file-logo" accept="image/*" style="display:none" onchange="onFileSelect('logo')" />
+        </div>
+      </div>
+    </div>
+
+    <div class="img-upload-card">
+      <div class="img-upload-card__lbl">제품 이미지</div>
+      <div class="img-upload-row">
+        <div class="img-preview-box">
+          ${productSrc
+            ? `<img id="preview-product" src="${esc(productSrc)}" alt="제품 이미지" />`
+            : `<div id="preview-product" class="no-img">이미지 없음<br><small>SVG 일러스트 표시됨</small></div>`}
+        </div>
+        <div class="img-upload-controls">
+          <div class="img-hint">제품 소개 섹션 카드에 표시됩니다. 업로드하면 기본 SVG 일러스트를 대체합니다.</div>
+          <div class="img-filename" id="fname-product">파일을 선택하세요</div>
+          <div class="btn-row">
+            <button class="btn-file" onclick="document.getElementById('file-product').click()">📁 파일 선택</button>
+            <button class="btn-upload-go" id="ubtn-product" disabled onclick="uploadImage('product')">업로드</button>
+            ${productSrc ? `<button class="btn-file" style="color:var(--danger);border-color:var(--danger);" onclick="removeImage('product')">삭제</button>` : ''}
+          </div>
+          <div class="upload-progress" id="prog-product">업로드 중...</div>
+          <input type="file" id="file-product" accept="image/*" style="display:none" onchange="onFileSelect('product')" />
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function onFileSelect(type) {
+  const fileInput = document.getElementById(`file-${type}`);
+  const fname = document.getElementById(`fname-${type}`);
+  const ubtn = document.getElementById(`ubtn-${type}`);
+  if (!fileInput.files[0]) return;
+  const file = fileInput.files[0];
+  fname.textContent = file.name;
+  ubtn.disabled = false;
+  // 미리보기
+  const reader = new FileReader();
+  reader.onload = e => {
+    const box = document.getElementById(`preview-${type}`);
+    if (box) {
+      if (box.tagName === 'IMG') {
+        box.src = e.target.result;
+      } else {
+        const img = document.createElement('img');
+        img.id = `preview-${type}`;
+        img.src = e.target.result;
+        img.alt = type;
+        img.style.cssText = 'max-width:100%;max-height:100%;object-fit:contain;';
+        box.replaceWith(img);
+      }
+    }
+  };
+  reader.readAsDataURL(file);
+}
+
+async function uploadImage(type) {
+  const fileInput = document.getElementById(`file-${type}`);
+  const ubtn = document.getElementById(`ubtn-${type}`);
+  const prog = document.getElementById(`prog-${type}`);
+  if (!fileInput.files[0]) return;
+  ubtn.disabled = true; prog.style.display = 'block';
+  try {
+    const formData = new FormData();
+    formData.append('image', fileInput.files[0]);
+    const r = await fetch(`/api/upload/${type}`, {
+      method: 'POST',
+      headers: { 'x-token': token },
+      body: formData
+    });
+    const d = await r.json();
+    if (!r.ok) { if (r.status === 401) { doLogout(); return; } throw new Error(d.error || '업로드 실패'); }
+    imageState[type] = d.url;
+    // content.json에 즉시 저장
+    const content = collectFormData();
+    await fetch('/api/content', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-token': token },
+      body: JSON.stringify(content)
+    });
+    showToast('이미지가 업로드되었습니다.', 'ok');
+    fileInput.value = '';
+    document.getElementById(`fname-${type}`).textContent = '파일을 선택하세요';
+    // 삭제 버튼 추가 (product만)
+    if (type === 'product') renderImages_refresh();
+  } catch (e) {
+    showToast(e.message, 'err');
+    ubtn.disabled = false;
+  } finally {
+    prog.style.display = 'none';
+    ubtn.disabled = true;
+  }
+}
+
+async function removeImage(type) {
+  imageState[type] = null;
+  const content = collectFormData();
+  await fetch('/api/content', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'x-token': token },
+    body: JSON.stringify(content)
+  });
+  showToast('이미지가 삭제되었습니다.', 'ok');
+  renderImages_refresh();
+}
+
+function renderImages_refresh() {
+  const old = document.getElementById('s-images');
+  if (!old) return;
+  const tmp = document.createElement('div');
+  tmp.innerHTML = renderImages();
+  old.replaceWith(tmp.firstElementChild);
 }
 
 const fld = (label, id, val, hint) => `

@@ -488,6 +488,20 @@
     txt('ft-addr', c.company.address);
     txt('ft-copy', `© 2024 ${c.company.nameKo}. All rights reserved.`);
     txt('ft-domain', c.company.website);
+
+    // 이미지
+    if (c.images) {
+      if (c.images.logo) {
+        const logoImg = document.querySelector('.nav__logo-img');
+        if (logoImg) logoImg.src = c.images.logo;
+      }
+      if (c.images.product) {
+        const cardVisual = document.querySelector('.product__card-visual');
+        if (cardVisual) {
+          cardVisual.innerHTML = `<img src="${esc(c.images.product)}" alt="제품 이미지" style="max-width:100%;max-height:260px;object-fit:contain;border-radius:6px;" />`;
+        }
+      }
+    }
   } catch (_) { /* use hardcoded defaults */ }
 })();
 </script>
